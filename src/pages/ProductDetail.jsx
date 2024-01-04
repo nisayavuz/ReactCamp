@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Card, Image } from 'semantic-ui-react'
+import ProductService from "../services/productService";
 
 export default function ProductDetail() {
   let { id } = useParams();
+
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    let productService = new ProductService();
+    productService
+    .getProductById(id)
+      .then((result) => setProduct(result.data));
+  }, []);
+
+
   return (
     <div>
       <Card.Group>
@@ -14,10 +26,13 @@ export default function ProductDetail() {
               size="mini"
               src="https://react.semantic-ui.com/images/avatar/large/molly.png"
             />
-            <Card.Header>Molly Thomas</Card.Header>
-            <Card.Meta>New User</Card.Meta>
+            <Card.Header> {product.productName}</Card.Header>
+            <Card.Meta>Stock: {product.unitsInStock} </Card.Meta>
             <Card.Description>
-              Molly wants to add you to the group <strong>musicians</strong>
+              {product.quantityPerUnit}
+            </Card.Description>
+            <Card.Description>
+              {product.unitPrice}$
             </Card.Description>
           </Card.Content>
           <Card.Content extra>
